@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- CSS -->
+    <link rel="stylesheet" href="./src/main.css">
+    <title>Crypto Search</title>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light container">
+            <a class="navbar-brand">Crypto Search</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                      <span class="navbar-toggler-icon"></span>
+                    </button>
+            <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+                <ul class="navbar-nav ml-auto">
+                    <!-- <li class="nav-item">
+                        <a class="nav-link" href="#">Signin</a>
+                    </li> -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="profile.html">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- main container -->
+    <div class="container">
+        <div class="search-container d-flex justify-content-center">
+            <form class="search-form">
+                <div class="input-group mb-3 search-group">
+                    <input type="text" id="search" class="form-control" placeholder="Search" value="">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit" id="button-search">Search</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+        <div class="search-result">
+            <div class="row">
+                <div class="col coin-name"></div>
+                <div class="col coin-price"></div>
+                <div class="col coin-time"></div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div id="chart"></div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@latest"></script>
+
+
+
+    <!-- <footer>
+        <div class="container">
+            <p><span class="time"></span> Tom Santek</p>
+        </div>
+    </footer> -->
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script src="./src/profile.js"></script>
+</body>
+
+</html>

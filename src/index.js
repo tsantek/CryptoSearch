@@ -1,10 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
     getDataFromApiForTopTenCoins();
     price();
-
-
+    time();
 })
 
+// data on page
+function time() {
+    var d = new Date();
+    var n = d.getFullYear();
+    document.querySelector('.time').innerText = n;
+}
+
+// geting data from API
 
 function getDataFromApiForTopTenCoins() {
     fetch("https://api.nomics.com/v1/dashboard?key=2018-09-demo-dont-deploy-b69315e440beb145")
@@ -14,8 +21,6 @@ function getDataFromApiForTopTenCoins() {
             data.sort(function(a, b) {
                 return b.dayOpen - a.dayOpen
             })
-
-            // console.log(data)
 
             for (let i = 0; i < 10; i++) {
                 let currency = data[i].currency;
@@ -65,24 +70,28 @@ function getDataFromApiForTopTenCoins() {
 
 }
 
+//  search for price 
 
 function price() {
     setTimeout(function() {
         let arrCurrency = document.querySelectorAll('.currency');
-
         for (let i = 0; i < arrCurrency.length; i++) {
             fetch(`https://api.nomics.com/v1/markets/prices?key=2018-09-demo-dont-deploy-b69315e440beb145&currency=${arrCurrency[i].innerHTML}`)
                 .then(response => response.json())
                 .then(data => {
-
+                    // console.log(data)
                     let arrCoins = document.querySelector(`.${arrCurrency[i].innerHTML}`);
+                    for (let i = 0; i < data.length; i++) {
+                        // console.log(data[i])
+                        if (data[i].quote === "USD") {
+                            arrCoins.innerHTML = `${data[i].price}`
+                        } else {
+                            arrCoins.innerHTML = `${data[i].price}`
+                        }
+                    }
 
                 })
+                .catch(e => console.log(e))
         }
-    }, 1000);
-
-
-
-
-
+    }, 500);
 }

@@ -32,3 +32,44 @@ header {
 .crypto-dashboard-home-page {
     margin: 30px 0 0 0;
 }
+
+.terms {
+    margin: 30px 0 0 0;
+}
+
+footer p {
+    text-align: center;
+}
+
+
+/* PROFILE */
+
+.search-group {
+    margin: 30px 0 0 0;
+}
+
+.search-result {
+    margin: 30px 0 0 0;
+}
+
+.coin-name {
+    margin: 20px 0 0 0;
+    font-size: 30px;
+}
+
+.coin-price {
+    margin: 20px 0 0 0;
+    font-size: 30px;
+}
+
+.coin-time {
+    margin: 20px 0 0 0;
+}
+
+#chart {
+    margin: 20px 0 0 0;
+}
+
+.search-form {
+    width: 50%;
+}
