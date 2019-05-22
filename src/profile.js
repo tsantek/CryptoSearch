@@ -32,7 +32,19 @@ function showCoin(searchCoin) {
 }
 
 function getDataForChart(searchCoin) {
-    fetch(`https://api.nomics.com/v1/exchange_candles?key=2018-09-demo-dont-deploy-b69315e440beb145&interval=1d&exchange=binance&market=${searchCoin}USDT&start=2019-05-01T00%3A00%3A00Z&end=2019-05-21T00%3A00%3A00Z`)
+    let date = new Date();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+
+    if (month < 10) {
+        month = `0${date.getMonth() + 1}`
+    }
+    if (day < 10) {
+        day = `0${ate.getDate()}`
+    }
+
+
+    fetch(`https://api.nomics.com/v1/exchange_candles?key=2018-09-demo-dont-deploy-b69315e440beb145&interval=1d&exchange=binance&market=${searchCoin}USDT&start=2019-${month}-01T00%3A00%3A00Z&end=2019-${month}-${day}T00%3A00%3A00Z`)
         .then(response => response.json())
         .then(data => {
             // CHART
@@ -40,7 +52,7 @@ function getDataForChart(searchCoin) {
             var options = {
                 chart: {
                     height: 450,
-                    type: 'line',
+                    type: 'area',
                     zoom: {
                         enabled: false
                     }
