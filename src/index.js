@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
+    marketCap()
     getDataFromApiForTopTenCoins();
-    price();
     time();
 })
 
@@ -63,6 +63,8 @@ function getDataFromApiForTopTenCoins() {
                 `
 
             }
+
+            price();
         })
         .catch(e => {
             console.log(e);
@@ -90,8 +92,92 @@ function price() {
                         }
                     }
 
+
                 })
                 .catch(e => console.log(e))
         }
-    }, 500);
+    }, 50);
+}
+
+function marketCap() {
+
+    let date = new Date();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    let year = date.getFullYear();
+
+    if (month < 10) {
+        month = `0${date.getMonth() + 1}`
+    }
+    if (day < 10) {
+        day = `0${ate.getDate()}`
+    }
+
+
+    fetch(`https://api.nomics.com/v1/market-cap/history?key=2018-09-demo-dont-deploy-b69315e440beb145&start=${year}-${month}-01T00%3A00%3A00Z&end=${year}-${month}-${day}T00%3A00%3A00Z`)
+        .then(response => response.json())
+        .then(data => {
+
+            var options = {
+                chart: {
+                    height: 250,
+                    type: 'area',
+                    zoom: {
+                        enabled: false
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'straight'
+                },
+                series: [{
+                    name: "Price",
+                    data: []
+                }],
+                title: {
+                    text: `Market Cap in May`,
+                    align: 'center'
+                },
+                grid: {
+                    row: {
+                        colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                        opacity: 0.5
+                    },
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function kFormatter(num) {
+                            return Math.abs(num) > 999 ? Math.sign(num) * ((Math.abs(num) / 1000000000).toFixed(1)) + 'B' : Math.sign(num) * Math.abs(num)
+                        }
+                    },
+                },
+                xaxis: {
+                    categories: [],
+                    labels: {
+                        datetimeFormatter: {
+                            year: 'yyyy',
+                            month: 'MMM \'yy',
+                            day: 'dd MMM',
+                            hour: 'HH:mm'
+                        }
+                    }
+                }
+            }
+
+            var chart = new ApexCharts(
+                document.querySelector("#chart-line"),
+                options
+            );
+
+            chart.render();
+
+            console.log(data)
+            for (let i = 0; i < data.length; i++) {
+                options.series[0].data.push(data[i].market_cap);
+            }
+
+        })
+        .catch(e => console.log(e))
 }

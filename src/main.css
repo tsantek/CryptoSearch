@@ -31,6 +31,12 @@ header {
 
 .crypto-dashboard-home-page {
     margin: 30px 0 0 0;
+    font-size: 14px;
+}
+
+.crypto-dashboard-home-page h3 {
+    text-align: center;
+    font-size: 14px;
 }
 
 .terms {
@@ -72,4 +78,8 @@ footer p {
 
 .search-form {
     width: 50%;
+}
+
+.info-coin {
+    margin: 30px 0 30px 0;
 }
