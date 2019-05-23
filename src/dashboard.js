@@ -2,26 +2,59 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let form = document.querySelector('form');
 
+    const firebaseConfig = {
+        apiKey: "AIzaSyCsSbBmNmX5zSnRTb3Opgi8BCFFkTwWWdY",
+        authDomain: "cryptosearch-12b58.firebaseapp.com",
+        databaseURL: "https://cryptosearch-12b58.firebaseio.com",
+        projectId: "cryptosearch-12b58",
+        storageBucket: "cryptosearch-12b58.appspot.com",
+        messagingSenderId: "906511613182",
+        appId: "1:906511613182:web:ff8b006441814616"
+    };
 
 
-    firebaseLogin();
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+    //  AUTH LOGIN
+
+    login(db, auth);
+
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         let searchCoin;
         searchCoin = e.target[0].value.toUpperCase();
-        showCoin(searchCoin);
+        showCoin(searchCoin, auth, db);
         aboutCoin(searchCoin);
         getDataForChart(searchCoin);
     })
 
+
+    firebaseLogin(auth, db);
+    firebaseFav(db, auth);
+
+
 })
 
-function showCoin(searchCoin) {
-    fetch(`https://api.nomics.com/v1/currencies/sparkline?key=c70230f0d75bb35d650e00712558eba6&start=2019-05-01T00%3A00%3A00Z&end=2019-05-23T00%3A00%3A00Z`)
+function showCoin(searchCoin, auth, db) {
+    let date = new Date();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    let year = date.getFullYear();
+
+    if (month < 10) {
+        month = `0${date.getMonth() + 1}`
+    }
+    if (day < 10) {
+        day = `0${ate.getDate()}`
+    }
+
+    fetch(`https://api.nomics.com/v1/currencies/sparkline?key=c70230f0d75bb35d650e00712558eba6&start=${year}-${month}-01T00%3A00%3A00Z&end=${year}-${month}-${day}T00%3A00%3A00Z`)
         .then(response => response.json())
         .then(data => {
-            // console.log(data)
             for (let i = 0; i < data.length; i++) {
                 if (searchCoin === data[i].currency) {
                     let pricesLenght = data[i].prices.length - 1;
@@ -30,7 +63,70 @@ function showCoin(searchCoin) {
                     document.querySelector('.coin-price').innerHTML = `${data[i].prices[pricesLenght]} USD`;
                 }
             }
-            // chartGoogleLine(data, searchCoin)
+
+            document.querySelector('.favorite').innerHTML = `☆`;
+
+            var docRef = db.collection("favorites").doc(auth.currentUser.email);
+
+            docRef.get().then((doc) => {
+                for (let i = 0; i < doc.data().coins.length; i++) {
+                    if (doc.data().coins[i].trim() === document.querySelector('.coin-name').innerHTML) {
+                        document.querySelector('.favorite').innerHTML = `★`;
+                    }
+                }
+            })
+
+
+
+            document.querySelector('.favorite').addEventListener('click', (e) => {
+                let fav = document.querySelector('.favorite');
+                if (fav.innerHTML === '☆') {
+                    fav.innerHTML = "★";
+                    let data = [];
+                    let coinsFav = document.querySelectorAll('.coin-favorite-item');
+
+                    for (let i = 0; i < coinsFav.length; i++) {
+                        data.push(coinsFav[i].innerHTML)
+                    }
+
+                    data.push(document.querySelector('.coin-name').innerHTML);
+
+                    db.collection("favorites").doc(auth.currentUser.email).update({
+                            coins: data
+                        })
+                        .then(function() {
+                            document.querySelector('.favorite-coin').innerHTML = "";
+                            firebaseFav(db, auth)
+                            console.log("Document successfully written!");
+                        })
+                        .catch(function(error) {
+                            console.error("Error writing document: ", error);
+                        });
+
+
+                } else if (fav.innerHTML === '★') {
+                    fav.innerHTML = "☆"
+                    let coinsFav = document.querySelectorAll('.coin-favorite-item');
+                    let data = []
+                    for (let i = 0; i < coinsFav.length; i++) {
+                        if (coinsFav[i].innerHTML.trim() !== document.querySelector('.coin-name').innerHTML) {
+                            data.push(coinsFav[i].innerHTML)
+                        }
+                    }
+                    db.collection("favorites").doc(auth.currentUser.email).update({
+                            coins: data
+                        })
+                        .then(function() {
+                            document.querySelector('.favorite-coin').innerHTML = "";
+                            firebaseFav(db, auth)
+                            console.log("Document successfully written!");
+                        })
+                        .catch(function(error) {
+                            console.error("Error writing document: ", error);
+                        });
+                }
+            });
+
             chart(data, searchCoin)
 
         })
@@ -86,10 +182,10 @@ function chart(data, searchCoin) {
         // chart end
     for (let i = 0; i < data.length; i++) {
         if (searchCoin === data[i].currency) {
-            console.log(data[i])
             data[i].prices.map((price, index) => {
                 options.data.datasets[0].data.push(parseFloat(price))
-                options.data.labels.push(index)
+                let dayAndMonth = new Date(data[i].timestamps[index]);
+                options.data.labels.push(index + 1)
             })
         }
     }
@@ -137,8 +233,9 @@ function googleCharts(data, searchCoin) {
             candlestick: {
                 fallingColor: { strokeWidth: 0, fill: '#a52714' }, // red
                 risingColor: { strokeWidth: 0, fill: '#0f9d58' } // green
-            },
-            chartArea: { left: '4%', top: "10%", width: '96%', height: '50%' }
+            }
+            // ,
+            // chartArea: { left: '4%', top: "10%", width: '90%', height: '50%' }
         };
 
         var chart = new google.visualization.CandlestickChart(document.getElementById('chart_div'));
@@ -147,100 +244,16 @@ function googleCharts(data, searchCoin) {
     }
 }
 
-function chartGoogleLine(dataCoin, searchCoin) {
-    google.charts.load('current', { packages: ['corechart', 'line'] });
-    google.charts.setOnLoadCallback(drawLogScales);
-
-    function drawLogScales() {
-        var data = new google.visualization.DataTable();
-        data.addColumn('number', 'X');
-        data.addColumn('number', searchCoin);
-
-        let coin = []
-
-        for (let i = 0; i < data.length; i++) {
-            if (searchCoin === data[i].currency) {
-                console.log(data[i])
-                data[i].prices.map((price, index) => {
-                    options.data.datasets[0].data.push(parseFloat(price))
-                    options.data.labels.push(index)
-                })
-            }
-        }
-
-        console.log(coin)
-
-        data.addRows([
-            [0, 0],
-            [1, 10],
-            [2, 23],
-            [3, 17],
-            [4, 18],
-            [5, 9]
-        ]);
-
-        var options = {
-            hAxis: {
-                logScale: true
-            },
-            vAxis: {
-                logScale: false
-            },
-            colors: ['blue']
-        };
-
-        var chart = new google.visualization.LineChart(document.getElementById('chart_div_line'));
-        chart.draw(data, options);
-    }
-
-}
 
 
 
 
-
-
-function firebaseLogin() {
-
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyCsSbBmNmX5zSnRTb3Opgi8BCFFkTwWWdY",
-        authDomain: "cryptosearch-12b58.firebaseapp.com",
-        databaseURL: "https://cryptosearch-12b58.firebaseio.com",
-        projectId: "cryptosearch-12b58",
-        storageBucket: "cryptosearch-12b58.appspot.com",
-        messagingSenderId: "906511613182",
-        appId: "1:906511613182:web:ff8b006441814616"
-    };
-
-
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-
-    const db = firebase.firestore()
-
-    //  AUTH LOGIN
-
+function firebaseLogin(auth, db) {
 
     // password checking
-    let form = document.querySelector('.modal-form');
 
     document.querySelector('.back-to-index').addEventListener('click', (e) => {
         window.location.href = "./index.html";
-    })
-
-    form.addEventListener('submit', (e) => {
-        let userName = document.querySelector('#userName').value;
-        let password = document.querySelector('#password').value;
-        const auth = firebase.auth();
-        e.preventDefault();
-        const promise = auth.signInWithEmailAndPassword(userName, password);
-        promise.catch(e => {
-                console.log(e)
-                document.querySelector('.error-message').innerHTML = e
-                document.querySelector('.error-message').style.color = "red";
-            })
-            // form.reset();
     })
 
     document.querySelector('#logout').addEventListener('click', function() {
@@ -264,4 +277,38 @@ function firebaseLogin() {
     });
 
 
+}
+
+
+function firebaseFav(db, auth) {
+    db.collection("favorites").get().then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            if (doc.id === auth.currentUser.email) {
+                for (let i = 0; i < doc.data().coins.length; i++)
+                    document.querySelector('.favorite-coin').innerHTML += `<a class="coin-favorite-item">${doc.data().coins[i]} </a>`
+            }
+        });
+    });
+}
+
+
+function login(db, auth) {
+
+    let form = document.querySelector('.modal-form');
+
+    form.addEventListener('submit', (e) => {
+        let userName = document.querySelector('#userName').value;
+        let password = document.querySelector('#password').value;
+        e.preventDefault();
+        const promise = auth.signInWithEmailAndPassword(userName, password);
+        promise.then(t => {
+            location.reload(true)
+        })
+        promise.catch(e => {
+                console.log(e)
+                document.querySelector('.error-message').innerHTML = e
+                document.querySelector('.error-message').style.color = "red";
+            })
+            // form.reset();
+    })
 }

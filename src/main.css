@@ -84,8 +84,8 @@ footer p {
     margin: 30px 0 30px 0;
 }
 
-.favorite-item {
-    padding: 0 10px 0 10px;
+.favorite {
+    width: 20px;
     cursor: pointer;
 }
 

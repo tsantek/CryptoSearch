@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     firebase.initializeApp(firebaseConfig);
 
     const auth = firebase.auth()
+    const db = firebase.firestore();
 
     //  AUTH LOGIN
 
@@ -32,6 +33,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log(user)
                 document.querySelector('.modal-title').innerHTML = "Wellcome to Crypto Search";
                 document.querySelector('.modal-body').innerHTML = "Fowarding to Dashboard....";
+
+                db.collection("favorites").doc(email).set({
+                        coints: []
+                    })
+                    .then(function() {
+                        console.log("Document successfully written!");
+                    })
+                    .catch(function(error) {
+                        console.error("Error writing document: ", error);
+                    });
+
                 $('.modal').modal('show');
                 setTimeout(function() {
                     window.location.href = "./dashboard.html";
@@ -42,7 +54,5 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
     })
-
-
 
 })
