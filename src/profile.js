@@ -1,4 +1,19 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const firebaseConfig = {
+        apiKey: "AIzaSyCsSbBmNmX5zSnRTb3Opgi8BCFFkTwWWdY",
+        authDomain: "cryptosearch-12b58.firebaseapp.com",
+        databaseURL: "https://cryptosearch-12b58.firebaseio.com",
+        projectId: "cryptosearch-12b58",
+        storageBucket: "cryptosearch-12b58.appspot.com",
+        messagingSenderId: "906511613182",
+        appId: "1:906511613182:web:ff8b006441814616"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+    const db = firebase.firestore()
+        // const auth = firebase.auth()
+    fireBase(db);
 
     let form = document.querySelector('form');
     form.addEventListener('submit', (e) => {
@@ -7,16 +22,18 @@ document.addEventListener('DOMContentLoaded', function() {
         searchCoin = e.target[0].value;
         aboutCoin(searchCoin);
         showCoin(searchCoin);
-    })
-    favoriteCoin();
-    // TEMP COIN SEARCH
-    // let searchCoin = "ETH"
 
-    // aboutCoin(searchCoin);
-    // showCoin(searchCoin);
+    })
 })
 
+
+
 function showCoin(searchCoin) {
+
+
+    // favoritesIncludes(searchCoin, fav);
+    // updateFav(fav, searchCoin);
+    // removeFav(fav, searchCoin, db);
     let date = new Date();
     let month = date.getMonth() + 1;
     let day = date.getDate();
@@ -63,7 +80,7 @@ function showCoin(searchCoin) {
                         },
                         grid: {
                             row: {
-                                colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                                colors: ['#f3f3f3', 'transparent'],
                                 opacity: 0.5
                             },
                         },
@@ -80,7 +97,9 @@ function showCoin(searchCoin) {
                     chart.render();
                 }
             }
+
         })
+
     getDataForChart(searchCoin);
 
 
@@ -153,7 +172,7 @@ function candleChart(data, searchCoin) {
 }
 
 
-function aboutCoin(searchCoin) {
+function aboutCoin(searchCoin, fav) {
     fetch("https://api.nomics.com/v1/dashboard?key=2018-09-demo-dont-deploy-b69315e440beb145")
         .then(response => response.json())
         .then(data => {
@@ -170,30 +189,21 @@ function aboutCoin(searchCoin) {
         })
 }
 
-function favoriteCoin(searchCoin) {
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyCsSbBmNmX5zSnRTb3Opgi8BCFFkTwWWdY",
-        authDomain: "cryptosearch-12b58.firebaseapp.com",
-        databaseURL: "https://cryptosearch-12b58.firebaseio.com",
-        projectId: "cryptosearch-12b58",
-        storageBucket: "cryptosearch-12b58.appspot.com",
-        messagingSenderId: "906511613182",
-        appId: "1:906511613182:web:ff8b006441814616"
-    };
 
-    firebase.initializeApp(firebaseConfig);
 
-    const db = firebase.firestore()
-    const auth = firebase.auth()
+// FIREBASE
 
-    function getFavorites(favorites) {
+
+function fireBase(db) {
+
+    function getMyInfo(collectionName) {
         return new Promise((resolve, reject) => {
-            db.collection(favorites).get()
+            db.collection(collectionName).get()
                 .then((querySnapshot) => {
                     querySnapshot.forEach((doc) => {
-                        const favorite = doc.data()
-                        resolve(favorite)
+                        const me = doc.data()
+                        resolve(me)
                     });
                 })
                 .catch(e => {
@@ -202,29 +212,191 @@ function favoriteCoin(searchCoin) {
         })
     }
 
-    getFavorites("favorites")
-        .then(favorite => {
-            for (key in favorite) {
-                if (key === "santek.vg@gmail.com") {
-                    // console.log(favorite[key])
-                    if (favorite[key].length === 0) {
-                        document.querySelector('.favorites-coins').innerHTML += `
-                        <a class="favorite-item"> You don't have any favorites </a>
-                        `
-                    }
-                    for (let i = 0; i < favorite[key].length; i++) {
-                        document.querySelector('.favorites-coins').innerHTML += `
-                        <a class="favorite-item" name=${favorite[key][i]} >  ${favorite[key][i]} </a>
-                        `
-                    }
-                }
-            }
-
-            let x = document.querySelectorAll('.favorite-item');
-
-
+    getMyInfo("favorites")
+        .then(me => {
+            console.log(me)
         })
         .catch(e => {
             alert(e)
         })
+
+
+    function handleBioSave() {
+        db.collection("favorites").doc("RMAgnEjKJqpKwy2PZeet").update({
+                favorites: ["XRP"]
+            })
+            .then(function() {
+                console.log("PASSED")
+            })
+            .catch(function(error) {
+                console.error("Error writing document: ", error);
+            });
+    }
+
+    // document.querySelector('.favorites-coins').addEventListener('click', (e) => {
+    //     handleBioSave()
+    // })
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// function favoriteCoin(db, fav, searchCoin) {
+
+//     function getFavorites(favorites) {
+//         return new Promise((resolve, reject) => {
+//             db.collection(favorites).get()
+//                 .then((querySnapshot) => {
+//                     querySnapshot.forEach((doc) => {
+//                         const favorite = doc.data()
+//                         resolve(favorite)
+//                     });
+//                 })
+//                 .catch(e => {
+//                     reject(e)
+//                 })
+//         })
+//     }
+
+//     getFavorites("favorites", fav, searchCoin)
+//         .then(favorite => {
+//             for (key in favorite) {
+//                 if (key === "santek.vg@gmail.com") {
+//                     // console.log(favorite[key])
+//                     if (favorite[key].length === 0) {
+//                         document.querySelector('.favorites-coins').innerHTML += `
+//                         <a class="favorite-item"> You don't have any favorites </a>
+//                         `
+//                     }
+//                     for (let i = 0; i < favorite[key].length; i++) {
+//                         // put all favorites in fav
+//                         fav.push(favorite[key][i])
+
+//                     }
+//                 }
+//                 showFav(fav);
+//             }
+
+//             let arrFav = document.querySelectorAll('.favorite-item');
+//             for (let i = 0; i < arrFav.length; i++) {
+//                 arrFav[i].addEventListener('click', (e) => {
+//                     let favoriteCoint = e.target.name
+//                     aboutCoin(favoriteCoint, fav);
+//                     showCoin(favoriteCoint, fav);
+//                 })
+//             }
+//         })
+//         .catch(e => {
+//             alert(e)
+//         })
+// }
+
+
+// LIST FAVORITES 
+// function showFav(fav) {
+//     for (let i = 0; i < fav.length; i++) {
+//         document.querySelector('.favorites-coins').innerHTML += `
+//         <a class="favorite-item" name=${fav[i]} >  ${fav[i]} </a>
+//         `
+//     }
+// }
+
+
+// function favoritesIncludes(searchCoin, fav) {
+
+//     if (fav.includes(searchCoin)) {
+//         console.log(searchCoin)
+//         document.querySelector('.favorite-button').innerHTML = "FAV"
+//     }
+
+//     if (!fav.includes(searchCoin)) {
+//         console.log(searchCoin)
+//         document.querySelector('.favorite-button').innerHTML = "FAV NOOOT"
+//     }
+
+// }
+// // ADD new one
+
+// function updateFav(fav, searchCoin) {
+//     let favorite = document.querySelector('.favorite-button');
+//     console.log(fav)
+
+//     favorite.addEventListener('click', (e) => {
+//         if (favorite.innerHTML === "FAV NOOOT") {
+//             fav.push(searchCoin)
+//             document.querySelector('.favorites-coins').innerHTML = "Favorites"
+//             showFav(fav)
+//             let arrFav = document.querySelectorAll('.favorite-item');
+//             for (let i = 0; i < arrFav.length; i++) {
+//                 arrFav[i].addEventListener('click', (e) => {
+//                     let favoriteCoint = e.target.name
+//                     aboutCoin(favoriteCoint, fav);
+//                     showCoin(favoriteCoint, fav);
+//                 })
+//             }
+//             console.log(fav)
+//         }
+//     })
+// }
+
+// // REMOVE ONE
+
+// function removeFav(fav, searchCoin, db) {
+
+//     let favorite = document.querySelector('.favorite-button');
+//     favorite.addEventListener('click', (e) => {
+//         if (favorite.innerHTML === "FAV") {
+//             console.log(favorite)
+
+//             for (var i = fav.length - 1; i >= 0; i--) {
+//                 if (fav[i] === searchCoin) {
+//                     fav.splice(i, 1);
+//                 }
+//             }
+
+
+//             document.querySelector('.favorites-coins').innerHTML = "Favorites"
+
+
+//             showFav(fav)
+//             updateFav(fav)
+
+//             // UPDATE LIST
+//             let arrFav = document.querySelectorAll('.favorite-item');
+//             for (let i = 0; i < arrFav.length; i++) {
+//                 arrFav[i].addEventListener('click', (e) => {
+//                     let favoriteCoint = e.target.name
+//                     aboutCoin(favoriteCoint, fav);
+//                     showCoin(favoriteCoint, fav);
+//                 })
+//             }
+
+//             console.log(fav)
+//         }
+//     })
+// }
+
+
+
+// function updateFav(fav, db) {
+//     db.collection("favorites").doc("RMAgnEjKJqpKwy2PZeet").update({
+//         "santek.vg@gmail.com": fav
+//     })
+// }
