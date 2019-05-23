@@ -13,8 +13,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const db = firebase.firestore()
         // const auth = firebase.auth()
-    fireBase(db);
 
+    let arrCoins = [];
+
+    fireBase(db, arrCoins);
     let form = document.querySelector('form');
     form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -24,13 +26,12 @@ document.addEventListener('DOMContentLoaded', function() {
         showCoin(searchCoin);
 
     })
+
 })
 
 
 
 function showCoin(searchCoin) {
-
-
     // favoritesIncludes(searchCoin, fav);
     // updateFav(fav, searchCoin);
     // removeFav(fav, searchCoin, db);
@@ -195,15 +196,15 @@ function aboutCoin(searchCoin, fav) {
 // FIREBASE
 
 
-function fireBase(db) {
+function fireBase(db, arrCoins) {
 
     function getMyInfo(collectionName) {
         return new Promise((resolve, reject) => {
             db.collection(collectionName).get()
                 .then((querySnapshot) => {
                     querySnapshot.forEach((doc) => {
-                        const me = doc.data()
-                        resolve(me)
+                        const coins = doc.data()
+                        resolve(coins)
                     });
                 })
                 .catch(e => {
@@ -212,33 +213,44 @@ function fireBase(db) {
         })
     }
 
-    getMyInfo("favorites")
-        .then(me => {
-            console.log(me)
+    getMyInfo("favorites", arrCoins)
+        .then(coins => {
+            arrCoins = coins.favorites;
+            for (let i = 0; i < arrCoins.length; i++) {
+                document.querySelector('.favorites-coins').innerHTML += ` <a class="favorite-item" name=${arrCoins[i]} >  ${arrCoins[i]} </a> `
+            }
+            let arrFav = document.querySelectorAll('.favorite-item');
+            for (let i = 0; i < arrFav.length; i++) {
+                arrFav[i].addEventListener('click', (e) => {
+                    let favoriteCoint = e.target.name
+                    aboutCoin(favoriteCoint);
+                    showCoin(favoriteCoint);
+                })
+            }
         })
         .catch(e => {
             alert(e)
         })
 
 
-    function handleBioSave() {
-        db.collection("favorites").doc("RMAgnEjKJqpKwy2PZeet").update({
-                favorites: ["XRP"]
-            })
-            .then(function() {
-                console.log("PASSED")
-            })
-            .catch(function(error) {
-                console.error("Error writing document: ", error);
-            });
-    }
+    //     function handleBioSave(arrCoins) {
+    //         console.log(arrCoins)
+    //         db.collection("favorites").doc("RMAgnEjKJqpKwy2PZeet").update({
+    //                 favorites: arrCoins
+    //             })
+    //             .then(function() {
+    //                 document.querySelector('.favorites-coins').innerHTML = "TEST"
+    //                 console.log("PASSED")
+    //             })
+    //             .catch(function(error) {
+    //                 console.error("Error writing document: ", error);
+    //             });
+    //     }
 
-    // document.querySelector('.favorites-coins').addEventListener('click', (e) => {
-    //     handleBioSave()
-    // })
+    //     document.querySelector('.fav-coin').addEventListener('click', (e) => {
+    //         handleBioSave(arrCoins)
+    //     })
 }
-
-
 
 
 
