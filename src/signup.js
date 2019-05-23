@@ -1,8 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-
-
-
     const firebaseConfig = {
         apiKey: "AIzaSyCsSbBmNmX5zSnRTb3Opgi8BCFFkTwWWdY",
         authDomain: "cryptosearch-12b58.firebaseapp.com",
