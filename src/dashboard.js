@@ -2,10 +2,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let form = document.querySelector('form');
 
+
+
+    firebaseLogin();
+
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         let searchCoin;
-        searchCoin = e.target[0].value;
+        searchCoin = e.target[0].value.toUpperCase();
         showCoin(searchCoin);
         aboutCoin(searchCoin);
         getDataForChart(searchCoin);
@@ -188,5 +192,77 @@ function chartGoogleLine(dataCoin, searchCoin) {
         var chart = new google.visualization.LineChart(document.getElementById('chart_div_line'));
         chart.draw(data, options);
     }
+
+}
+
+
+
+
+
+
+function firebaseLogin() {
+
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCsSbBmNmX5zSnRTb3Opgi8BCFFkTwWWdY",
+        authDomain: "cryptosearch-12b58.firebaseapp.com",
+        databaseURL: "https://cryptosearch-12b58.firebaseio.com",
+        projectId: "cryptosearch-12b58",
+        storageBucket: "cryptosearch-12b58.appspot.com",
+        messagingSenderId: "906511613182",
+        appId: "1:906511613182:web:ff8b006441814616"
+    };
+
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    const db = firebase.firestore()
+
+    //  AUTH LOGIN
+
+
+    // password checking
+    let form = document.querySelector('.modal-form');
+
+    document.querySelector('.back-to-index').addEventListener('click', (e) => {
+        window.location.href = "./index.html";
+    })
+
+    form.addEventListener('submit', (e) => {
+        let userName = document.querySelector('#userName').value;
+        let password = document.querySelector('#password').value;
+        const auth = firebase.auth();
+        e.preventDefault();
+        const promise = auth.signInWithEmailAndPassword(userName, password);
+        promise.catch(e => {
+                console.log(e)
+                document.querySelector('.error-message').innerHTML = e
+                document.querySelector('.error-message').style.color = "red";
+            })
+            // form.reset();
+    })
+
+    document.querySelector('#logout').addEventListener('click', function() {
+        firebase.auth().signOut();
+    })
+
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+            document.querySelector('#logout').innerText = "Logout"
+            console.log("loged in")
+            $('.modal').modal('hide');
+            // User is signed in.
+        } else {
+            document.querySelector('#logout').innerText = "Not Login"
+            $('#myModal').modal('show');
+            // document.querySelector('.main').style.display = "none";
+            console.log("NOT LOGED IN")
+                // No user is signed in.
+            $('.modal').modal('show');
+            console.log(user)
+        }
+    });
+
 
 }

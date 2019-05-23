@@ -173,7 +173,7 @@ function marketCap() {
 
             chart.render();
 
-            console.log(data)
+            // console.log(data)
             for (let i = 0; i < data.length; i++) {
                 options.series[0].data.push(data[i].market_cap);
             }

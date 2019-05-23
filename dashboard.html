@@ -14,6 +14,9 @@
 </head>
 
 <body>
+
+
+    <!-- end modal -->
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light container">
             <a class="navbar-brand">Crypto Search</a>
@@ -26,7 +29,7 @@
                         <a class="nav-link" href="#">Signin</a>
                     </li> -->
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html">Logout</a>
+                        <a class="nav-link" id="logout" href="index.html">Logout</a>
                     </li>
                 </ul>
             </div>
@@ -42,7 +45,6 @@
                     <div class="input-group-append">
                         <button class="btn btn-outline-secondary" type="submit" id="button-search">Search</button>
                     </div>
-
                 </div>
             </form>
         </div>
@@ -78,6 +80,41 @@
             <p><span class="time"></span> Tom Santek</p>
         </div>
     </footer> -->
+
+
+
+    <!-- Modal -->
+    <div class="modal fade show" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                </div>
+                <div class="modal-body">
+                    <form class="modal-form" style="color: black">
+                        <p>Login</p>
+                        <div class="error-message"></div>
+                        <div class="form-group">
+                            <label for="userName">User Name</label>
+                            <input type="text" class="form-control" id="userName" placeholder="User Name" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" placeholder="Password" value="">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-danger back-to-index">Back</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -85,6 +122,12 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <!-- FIREBASE -->
+    <script defer src="https://www.gstatic.com/firebasejs/6.0.2/firebase-app.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/6.0.2/firebase-auth.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/6.0.2/firebase-firestore.js"></script>
+
+    <!-- JS -->
     <script src="./src/dashboard.js"></script>
 </body>
 
