@@ -26,7 +26,7 @@
                         <a class="nav-link" href="#">Signin</a>
                     </li> -->
                     <li class="nav-item">
-                        <a class="nav-link" href="profile.html">Logout</a>
+                        <a class="nav-link" href="index.html">Logout</a>
                     </li>
                 </ul>
             </div>
@@ -47,14 +47,10 @@
             </form>
         </div>
 
-        <!-- FAVORITES -->
-        <div class="fav-coin"> Favorites: <span class="favorites-coins"></span></div>
-
         <div class="search-result">
             <div class="row">
                 <div class="col coin-name"></div>
                 <div class="col coin-price"></div>
-                <div class="col favorite-button"></div>
             </div>
             <div class="row info-coin">
                 <div class="col-2 availableSupply"></div>
@@ -65,16 +61,17 @@
                 <div class="col-2 yearOpen"></div>
             </div>
         </div>
+    </div>
+    <div class="container">
+        <!-- <div id="chart_div_line"></div> -->
+        <canvas id="line-chart" width="800" height="450"></canvas>
+        <div id="chart_div" style="width:auto; height: 500px;"></div>
 
-        <div id="chart-price"></div>
-        <div id="chart"></div>
-        <div id='chart-two'></div>
     </div>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts@latest"></script>
 
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 
     <!-- <footer>
         <div class="container">
@@ -87,15 +84,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-
-    <!-- <script src="https://cdn.jsdelivr.net/npm/apexcharts@latest"></script> -->
-    <script src="./apex.js"></script>
-
-    <script src="https://www.gstatic.com/firebasejs/6.0.2/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/6.0.2/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/6.0.2/firebase-auth.js"></script>
-
-    <script src="./src/profile.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="./src/dashboard.js"></script>
 </body>
 
 </html>
