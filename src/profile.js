@@ -1,22 +1,23 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-    // let form = document.querySelector('form');
+    let form = document.querySelector('form');
 
-    // form.addEventListener('submit', (e) => {
-    //     e.preventDefault();
-    //     let searchCoin;
-    //     // console.log(e.target[0].value)
-    //     searchCoin = e.target[0].value;
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        let searchCoin;
+        // console.log(e.target[0].value)
+        searchCoin = e.target[0].value;
 
-    //     // console.log(searchCoin)
-    //     showCoin(searchCoin);
-    // })
+        // console.log(searchCoin)
+        showCoin(searchCoin);
+        aboutCoin(searchCoin);
+    })
 
     // TEMP COIN SEARCH
-    let searchCoin = "ETH"
+    // let searchCoin = "ETH"
 
-    aboutCoin(searchCoin);
-    showCoin(searchCoin);
+    // aboutCoin(searchCoin);
+    // showCoin(searchCoin);
 })
 
 function showCoin(searchCoin) {
