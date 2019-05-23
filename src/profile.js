@@ -9,32 +9,60 @@ document.addEventListener('DOMContentLoaded', function() {
         appId: "1:906511613182:web:ff8b006441814616"
     };
 
-    firebase.initializeApp(firebaseConfig);
+    // firebase.initializeApp(firebaseConfig);
 
-    const db = firebase.firestore()
-        // const auth = firebase.auth()
+    // const db = firebase.firestore()
 
-    let arrCoins = [];
 
-    fireBase(db, arrCoins);
+
     let form = document.querySelector('form');
+    // fireBase(db);
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         let searchCoin;
         searchCoin = e.target[0].value;
         aboutCoin(searchCoin);
-        showCoin(searchCoin);
-
+        showCoin(searchCoin)
     })
-
 })
 
 
 
-function showCoin(searchCoin) {
-    // favoritesIncludes(searchCoin, fav);
-    // updateFav(fav, searchCoin);
-    // removeFav(fav, searchCoin, db);
+function showCoin(searchCoin, db) {
+
+
+    // let favButt = document.querySelector('.favorite-button');
+    // let favCoins = document.querySelectorAll('.favorite-item');
+
+    // let arrFavCoins = []
+    // for (let i = 0; i < favCoins.length; i++) {
+    //     arrFavCoins.push(favCoins[i].name)
+    // }
+
+    // if (arrFavCoins.includes(searchCoin)) {
+    //     document.querySelector('.favorite-button').innerHTML = "FAV";
+    //     document.querySelector('.favorite-button').addEventListener('click', (e) => {
+    //         let selected = document.querySelector('.coin-name').innerHTML;
+    //         console.log(selected)
+    //         document.querySelector('.favorite-button').innerHTML = "FAV NOOOT";
+    //     })
+    // }
+
+    // if (!arrFavCoins.includes(searchCoin)) {
+    //     let selected = document.querySelector('.coin-name').innerHTML;
+    //     console.log(searchCoin)
+    //     document.querySelector('.favorite-button').innerHTML = "FAV NOOOT";
+    //     document.querySelector('.favorite-button').addEventListener('click', (e) => {
+    //         let selected = document.querySelector('.coin-name').innerHTML;
+    //         console.log(selected)
+    //         document.querySelector('.favorite-button').innerHTML = "FAV";
+    //     })
+    // }
+
+
+
+
+
     let date = new Date();
     let month = date.getMonth() + 1;
     let day = date.getDate();
@@ -173,7 +201,7 @@ function candleChart(data, searchCoin) {
 }
 
 
-function aboutCoin(searchCoin, fav) {
+function aboutCoin(searchCoin) {
     fetch("https://api.nomics.com/v1/dashboard?key=2018-09-demo-dont-deploy-b69315e440beb145")
         .then(response => response.json())
         .then(data => {
@@ -196,62 +224,81 @@ function aboutCoin(searchCoin, fav) {
 // FIREBASE
 
 
-function fireBase(db, arrCoins) {
+// function fireBase(db) {
 
-    function getMyInfo(collectionName) {
-        return new Promise((resolve, reject) => {
-            db.collection(collectionName).get()
-                .then((querySnapshot) => {
-                    querySnapshot.forEach((doc) => {
-                        const coins = doc.data()
-                        resolve(coins)
-                    });
-                })
-                .catch(e => {
-                    reject(e)
-                })
-        })
-    }
+//     function getMyInfo(collectionName) {
+//         return new Promise((resolve, reject) => {
+//             db.collection(collectionName).get()
+//                 .then((querySnapshot) => {
+//                     querySnapshot.forEach((doc) => {
+//                         const coins = doc.data()
+//                         resolve(coins)
+//                     });
+//                 })
+//                 .catch(e => {
+//                     reject(e)
+//                 })
+//         })
+//     }
 
-    getMyInfo("favorites", arrCoins)
-        .then(coins => {
-            arrCoins = coins.favorites;
-            for (let i = 0; i < arrCoins.length; i++) {
-                document.querySelector('.favorites-coins').innerHTML += ` <a class="favorite-item" name=${arrCoins[i]} >  ${arrCoins[i]} </a> `
-            }
-            let arrFav = document.querySelectorAll('.favorite-item');
-            for (let i = 0; i < arrFav.length; i++) {
-                arrFav[i].addEventListener('click', (e) => {
-                    let favoriteCoint = e.target.name
-                    aboutCoin(favoriteCoint);
-                    showCoin(favoriteCoint);
-                })
-            }
-        })
-        .catch(e => {
-            alert(e)
-        })
+//     getMyInfo("favorites")
+//         .then(coins => {
+
+//             // adding favorit list from server
+//             let arrCoins = coins.favorites;
+//             for (let i = 0; i < arrCoins.length; i++) {
+//                 document.querySelector('.favorites-coins').innerHTML += ` <a class="favorite-item" name=${arrCoins[i]} >  ${arrCoins[i]} </a> `
+//             }
+//             // click on list is selecting the right one
+//             let arrFav = document.querySelectorAll('.favorite-item');
+//             for (let i = 0; i < arrFav.length; i++) {
+//                 arrFav[i].addEventListener('click', (e) => {
+//                     let favoriteCoint = e.target.name
+//                     aboutCoin(favoriteCoint, arrCoins);
+//                     showCoin(favoriteCoint);
+//                 })
+//             }
+//         })
+//         .catch(e => {
+//             alert(e)
+//         })
 
 
-    //     function handleBioSave(arrCoins) {
-    //         console.log(arrCoins)
-    //         db.collection("favorites").doc("RMAgnEjKJqpKwy2PZeet").update({
-    //                 favorites: arrCoins
-    //             })
-    //             .then(function() {
-    //                 document.querySelector('.favorites-coins').innerHTML = "TEST"
-    //                 console.log("PASSED")
-    //             })
-    //             .catch(function(error) {
-    //                 console.error("Error writing document: ", error);
-    //             });
-    //     }
 
-    //     document.querySelector('.fav-coin').addEventListener('click', (e) => {
-    //         handleBioSave(arrCoins)
-    //     })
-}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//     function handleBioSave(arrCoins) {
+//         console.log(arrCoins)
+//         db.collection("favorites").doc("RMAgnEjKJqpKwy2PZeet").update({
+//                 favorites: arrCoins
+//             })
+//             .then(function() {
+//                 document.querySelector('.favorites-coins').innerHTML = "TEST"
+//                 console.log("PASSED")
+//             })
+//             .catch(function(error) {
+//                 console.error("Error writing document: ", error);
+//             });
+//     }
+
+// document.querySelector('.fav-coin').addEventListener('click', (e) => {
+//     // handleBioSave(arrCoins)
+//     console.log(arrCoins)
+// })
+// }
 
 
 
