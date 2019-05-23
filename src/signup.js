@@ -33,13 +33,15 @@ document.addEventListener('DOMContentLoaded', function() {
         auth.createUserWithEmailAndPassword(email, password)
             .then(user => {
                 console.log(user)
+                document.querySelector('.modal-title').innerHTML = "Wellcome to Crypto Search";
+                document.querySelector('.modal-body').innerHTML = "Fowarding to Dashboard....";
                 $('.modal').modal('show');
-            })
-            .catch(error => {
-                var errorCode = error.code;
-                var errorMessage = error.message;
-
-
+                setTimeout(function() {
+                    window.location.href = "./dashboard.html";
+                }, 2000);
+            }).catch(function(error) {
+                // An error happened.
+                console.log(error)
             });
 
     })

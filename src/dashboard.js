@@ -250,7 +250,7 @@ function firebaseLogin() {
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
             document.querySelector('#logout').innerText = "Logout"
-            console.log("loged in")
+                // console.log("loged in")
             $('.modal').modal('hide');
             // User is signed in.
         } else {
@@ -260,7 +260,6 @@ function firebaseLogin() {
             console.log("NOT LOGED IN")
                 // No user is signed in.
             $('.modal').modal('show');
-            console.log(user)
         }
     });
 
