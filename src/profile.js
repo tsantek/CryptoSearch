@@ -5,23 +5,15 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         let searchCoin;
-        // console.log(e.target[0].value)
         searchCoin = e.target[0].value;
-
-        // console.log(searchCoin)
         showCoin(searchCoin);
         aboutCoin(searchCoin);
     })
 
-    // TEMP COIN SEARCH
-    // let searchCoin = "ETH"
-
-    // aboutCoin(searchCoin);
-    // showCoin(searchCoin);
 })
 
 function showCoin(searchCoin) {
-    fetch(`https://api.nomics.com/v1/currencies/sparkline?key=2018-09-demo-dont-deploy-b69315e440beb145&start=2019-05-01T00%3A00%3A00Z&end=2019-05-23T00%3A00%3A00Z`)
+    fetch(`https://api.nomics.com/v1/currencies/sparkline?key=c70230f0d75bb35d650e00712558eba6&start=2019-05-01T00%3A00%3A00Z&end=2019-05-23T00%3A00%3A00Z`)
         .then(response => response.json())
         .then(data => {
             for (let i = 0; i < data.length; i++) {
@@ -34,7 +26,7 @@ function showCoin(searchCoin) {
                     var options = {
                         chart: {
                             height: 450,
-                            type: 'area',
+                            type: 'line',
                             zoom: {
                                 enabled: false
                             }
@@ -92,7 +84,7 @@ function getDataForChart(searchCoin) {
     }
 
 
-    fetch(`https://api.nomics.com/v1/exchange_candles?key=2018-09-demo-dont-deploy-b69315e440beb145&interval=1d&exchange=binance&market=${searchCoin}USDT&start=${year}-${month}-01T00%3A00%3A00Z&end=${year}-${month}-${day}T00%3A00%3A00Z`)
+    fetch(`https://api.nomics.com/v1/exchange_candles?key=c70230f0d75bb35d650e00712558eba6&interval=1d&exchange=binance&market=${searchCoin}USDT&start=${year}-${month}-01T00%3A00%3A00Z&end=${year}-${month}-${day}T00%3A00%3A00Z`)
         .then(response => response.json())
         .then(data => {
             // CHART
@@ -146,7 +138,7 @@ function candleChart(data, searchCoin) {
 
 
 function aboutCoin(searchCoin) {
-    fetch("https://api.nomics.com/v1/dashboard?key=2018-09-demo-dont-deploy-b69315e440beb145")
+    fetch("https://api.nomics.com/v1/dashboard?key=c70230f0d75bb35d650e00712558eba6")
         .then(response => response.json())
         .then(data => {
             for (let i = 0; i < data.length; i++) {
