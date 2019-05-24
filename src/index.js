@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
+    ifIsSignIn();
     marketCap()
     getDataFromApiForTopTenCoins();
     time();
-    ifIsSignIn();
 })
 
 // data on page
@@ -185,5 +185,46 @@ function marketCap() {
 
 
 function ifIsSignIn() {
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCsSbBmNmX5zSnRTb3Opgi8BCFFkTwWWdY",
+        authDomain: "cryptosearch-12b58.firebaseapp.com",
+        databaseURL: "https://cryptosearch-12b58.firebaseio.com",
+        projectId: "cryptosearch-12b58",
+        storageBucket: "cryptosearch-12b58.appspot.com",
+        messagingSenderId: "906511613182",
+        appId: "1:906511613182:web:ff8b006441814616"
+    };
+
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    const auth = firebase.auth();
+    //  AUTH LOGIN
+
+    document.querySelector('.logout').addEventListener('click', function() {
+        firebase.auth().signOut();
+    })
+
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+            console.log("loged in")
+            document.querySelector('.dashboard').style.display = "block";
+            document.querySelector('.logout').style.display = "block";
+            document.querySelector('.signup').style.display = "none";
+            document.querySelector('.login').style.display = "none";
+            // User is signed in.
+        } else {
+            document.querySelector('.dashboard').style.display = "none";
+            document.querySelector('.signup').style.display = "block";
+            document.querySelector('.logout').style.display = "none";
+            document.querySelector('.login').style.display = "block";
+
+            console.log("NOT LOGED IN")
+                // No user is signed in.
+        }
+    });
+
 
 }
