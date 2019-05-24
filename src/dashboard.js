@@ -64,68 +64,170 @@ function showCoin(searchCoin, auth, db) {
                 }
             }
 
-            document.querySelector('.favorite').innerHTML = `☆`;
-
             var docRef = db.collection("favorites").doc(auth.currentUser.email);
+            document.querySelector('.not-favorite').innerHTML = `☆`;
+
 
             docRef.get().then((doc) => {
                 for (let i = 0; i < doc.data().coins.length; i++) {
-                    if (doc.data().coins[i].trim() === document.querySelector('.coin-name').innerHTML) {
+                    if (doc.data().coins[i].trim() === searchCoin) {
                         document.querySelector('.favorite').innerHTML = `★`;
+                        document.querySelector('.not-favorite').innerHTML = ``;
+                    }
+                    if (doc.data().coins[i].trim() !== searchCoin) {
+                        document.querySelector('.favorite').innerHTML = ``;
+                        document.querySelector('.not-favorite').innerHTML = `☆`;
                     }
                 }
             })
 
+            document.querySelector('.not-favorite').addEventListener('click', (e) => {
+                let fav = document.querySelector('.favorite');
+                let notfav = document.querySelector('.not-favorite');
+                fav.innerHTML = "★";
+                notfav.innerHTML = "";
+                let dataCoin = [];
+                // GET FOR FIRE BASE
+                var docRef = db.collection("favorites").doc(auth.currentUser.email);
+                docRef.get().then(function(doc) {
+                    if (doc.exists) {
 
+                        for (let i = 0; i < doc.data().coins.length; i++) {
+                            console.log(doc.data().coins[i]);
+                            dataCoin.push(doc.data().coins[i])
+
+                        }
+                        dataCoin.push(document.querySelector('.coin-name').innerText)
+
+
+                        // PUSH ON FIREBASE
+                        db.collection("favorites").doc(auth.currentUser.email).set({
+                                coins: dataCoin
+                            })
+                            .then(function() {
+                                console.log("Document successfully written!");
+                            })
+                            .catch(function(error) {
+                                console.error("Error writing document: ", error);
+                            });
+                        // CHECK FOR CHANGES
+                        db.collection("favorites").doc(auth.currentUser.email)
+                            .onSnapshot(function(doc) {
+                                document.querySelector('.favorite-coin').innerHTML = "";
+                                for (let i = 0; i < doc.data().coins.length; i++) {
+                                    document.querySelector('.favorite-coin').innerHTML += `<a class="coin-favorite-item">${doc.data().coins[i]} </a>`
+                                }
+
+                            });
+
+                    } else {
+                        // doc.data() will be undefined in this case
+                        console.log("No such document!");
+                    }
+                }).catch(function(error) {
+                    console.log("Error getting document:", error);
+                });
+            });
 
             document.querySelector('.favorite').addEventListener('click', (e) => {
                 let fav = document.querySelector('.favorite');
-                if (fav.innerHTML === '☆') {
-                    fav.innerHTML = "★";
-                    let data = [];
-                    let coinsFav = document.querySelectorAll('.coin-favorite-item');
-
-                    for (let i = 0; i < coinsFav.length; i++) {
-                        data.push(coinsFav[i].innerHTML)
-                    }
-
-                    data.push(document.querySelector('.coin-name').innerHTML);
-
-                    db.collection("favorites").doc(auth.currentUser.email).update({
-                            coins: data
-                        })
-                        .then(function() {
-                            document.querySelector('.favorite-coin').innerHTML = "";
-                            firebaseFav(db, auth)
-                            console.log("Document successfully written!");
-                        })
-                        .catch(function(error) {
-                            console.error("Error writing document: ", error);
-                        });
+                let notfav = document.querySelector('.not-favorite');
+                fav.innerHTML = "";
+                notfav.innerHTML = "☆";
 
 
-                } else if (fav.innerHTML === '★') {
-                    fav.innerHTML = "☆"
-                    let coinsFav = document.querySelectorAll('.coin-favorite-item');
-                    let data = []
-                    for (let i = 0; i < coinsFav.length; i++) {
-                        if (coinsFav[i].innerHTML.trim() !== document.querySelector('.coin-name').innerHTML) {
-                            data.push(coinsFav[i].innerHTML)
+                let dataCoin = [];
+                // GET FOR FIRE BASE
+                var docRef = db.collection("favorites").doc(auth.currentUser.email);
+                docRef.get().then(function(doc) {
+                    if (doc.exists) {
+
+                        for (let i = 0; i < doc.data().coins.length; i++) {
+                            if (doc.data().coins[i] !== document.querySelector('.coin-name').innerHTML) {
+                                dataCoin.push(doc.data().coins[i])
+                            }
                         }
+                        // PUSH ON FIREBASE
+                        db.collection("favorites").doc(auth.currentUser.email).set({
+                                coins: dataCoin
+                            })
+                            .then(function() {
+                                console.log("Document successfully written!");
+                            })
+                            .catch(function(error) {
+                                console.error("Error writing document: ", error);
+                            });
+                        // CHECK FOR CHANGES
+                        db.collection("favorites").doc(auth.currentUser.email)
+                            .onSnapshot(function(doc) {
+                                document.querySelector('.favorite-coin').innerHTML = "";
+                                for (let i = 0; i < doc.data().coins.length; i++) {
+                                    document.querySelector('.favorite-coin').innerHTML += `<a class="coin-favorite-item">${doc.data().coins[i]} </a>`
+                                }
+
+                            });
+
+                    } else {
+                        // doc.data() will be undefined in this case
+                        console.log("No such document!");
                     }
-                    db.collection("favorites").doc(auth.currentUser.email).update({
-                            coins: data
-                        })
-                        .then(function() {
-                            document.querySelector('.favorite-coin').innerHTML = "";
-                            firebaseFav(db, auth)
-                            console.log("Document successfully written!");
-                        })
-                        .catch(function(error) {
-                            console.error("Error writing document: ", error);
-                        });
-                }
-            });
+                }).catch(function(error) {
+                    console.log("Error getting document:", error);
+                });
+
+
+
+
+            })
+
+
+            // document.querySelector('.favorite').addEventListener('click', (e) => {
+            //     let fav = document.querySelector('.favorite');
+            //     if (fav.innerHTML === '☆') {
+            //         fav.innerHTML = "★";
+            //         let data = [];
+            //         let coinsFav = document.querySelectorAll('.coin-favorite-item');
+            //         for (let i = 0; i < coinsFav.length; i++) {
+            //             data.push(coinsFav[i].innerHTML)
+            //         }
+            //         data.push(document.querySelector('.coin-name').innerHTML);
+            //         console.log(data)
+            // db.collection("favorites").doc(auth.currentUser.email).set({
+            //         coins: data
+            //     })
+            //     .then(function() {
+            //         document.querySelector('.favorite-coin').innerHTML = "";
+            //         console.log("Document successfully written!");
+            //     })
+            //     .catch(function(error) {
+            //         console.error("Error writing document: ", error);
+            //     });
+
+
+            // } else {
+            //     fav.innerHTML = "☆"
+            // let coinsFav = document.querySelectorAll('.coin-favorite-item');
+            // let data = []
+            // for (let i = 0; i < coinsFav.length; i++) {
+            //     if (coinsFav[i].innerHTML.trim() !== document.querySelector('.coin-name').innerHTML) {
+            //         data.push(coinsFav[i].innerHTML)
+            //     }
+            // }
+
+            // console.log(data)
+            // db.collection("favorites").doc(auth.currentUser.email).update({
+            //         coins: data
+            //     })
+            //     .then(function() {
+            //         document.querySelector('.favorite-coin').innerHTML = "";
+            //         firebaseFav(db, auth)
+            //         console.log("Document successfully written!");
+            //     })
+            //     .catch(function(error) {
+            //         console.error("Error writing document: ", error);
+            //     });
+            // }
+            // });
 
             chart(data, searchCoin)
 
