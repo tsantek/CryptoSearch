@@ -24,22 +24,20 @@ document.addEventListener('DOMContentLoaded', function() {
     firebaseLogin(auth, db);
     firebaseFav(db, auth);
 
+    let searchCoin;
     form.addEventListener('submit', (e) => {
         e.preventDefault();
-        let searchCoin;
         searchCoin = e.target[0].value.toUpperCase();
         showCoin(searchCoin, auth, db);
         aboutCoin(searchCoin);
         getDataForChart(searchCoin);
+        form.reset();
     })
-
-
-
-
-
+    favoriteLink(auth, db)
 })
 
 function showCoin(searchCoin, auth, db) {
+
     let date = new Date();
     let month = date.getMonth() + 1;
     let day = date.getDate();
@@ -58,22 +56,23 @@ function showCoin(searchCoin, auth, db) {
             for (let i = 0; i < data.length; i++) {
                 if (searchCoin === data[i].currency) {
                     let pricesLenght = data[i].prices.length - 1;
-
                     document.querySelector('.coin-name').innerHTML = searchCoin;
                     document.querySelector('.coin-price').innerHTML = `${data[i].prices[pricesLenght]} USD`;
                 }
             }
 
             var docRef = db.collection("favorites").doc(auth.currentUser.email);
-            document.querySelector('.not-favorite').innerHTML = `☆`;
 
             // STAR
             docRef.get().then((doc) => {
+
+                document.querySelector('.not-favorite').innerHTML = `☆`;
                 for (let i = 0; i < doc.data().coins.length; i++) {
                     if (doc.data().coins[i] === searchCoin) {
                         console.log("IT IS")
                         document.querySelector('.favorite').innerHTML = `★`;
                         document.querySelector('.not-favorite').innerHTML = ``;
+
                         return;
                     } else if (doc.data().coins[i].trim() !== searchCoin) {
                         console.log("IT IS NOT")
@@ -92,6 +91,7 @@ function showCoin(searchCoin, auth, db) {
                 // GET FOR FIRE BASE
                 var docRef = db.collection("favorites").doc(auth.currentUser.email);
                 docRef.get().then(function(doc) {
+
                     if (doc.exists) {
 
                         for (let i = 0; i < doc.data().coins.length; i++) {
@@ -122,6 +122,7 @@ function showCoin(searchCoin, auth, db) {
 
                             });
 
+                        favoriteLink(auth, db);
                     } else {
                         // doc.data() will be undefined in this case
                         console.log("No such document!");
@@ -143,7 +144,6 @@ function showCoin(searchCoin, auth, db) {
                 var docRef = db.collection("favorites").doc(auth.currentUser.email);
                 docRef.get().then(function(doc) {
                     if (doc.exists) {
-
                         for (let i = 0; i < doc.data().coins.length; i++) {
                             if (doc.data().coins[i] !== document.querySelector('.coin-name').innerHTML) {
                                 dataCoin.push(doc.data().coins[i])
@@ -166,9 +166,14 @@ function showCoin(searchCoin, auth, db) {
                                 for (let i = 0; i < doc.data().coins.length; i++) {
                                     document.querySelector('.favorite-coin').innerHTML += `<a class="coin-favorite-item">${doc.data().coins[i]} </a>`
                                 }
+                                console.log(doc.data())
+                                if (doc.data().coins.length === 0) {
+                                    document.querySelector('.favorite-coin').innerHTML = "You don't have any Fav coins"
+                                }
 
                             });
 
+                        favoriteLink(auth, db);
                     } else {
                         // doc.data() will be undefined in this case
                         console.log("No such document!");
@@ -181,56 +186,7 @@ function showCoin(searchCoin, auth, db) {
 
 
             })
-
-
-            // document.querySelector('.favorite').addEventListener('click', (e) => {
-            //     let fav = document.querySelector('.favorite');
-            //     if (fav.innerHTML === '☆') {
-            //         fav.innerHTML = "★";
-            //         let data = [];
-            //         let coinsFav = document.querySelectorAll('.coin-favorite-item');
-            //         for (let i = 0; i < coinsFav.length; i++) {
-            //             data.push(coinsFav[i].innerHTML)
-            //         }
-            //         data.push(document.querySelector('.coin-name').innerHTML);
-            //         console.log(data)
-            // db.collection("favorites").doc(auth.currentUser.email).set({
-            //         coins: data
-            //     })
-            //     .then(function() {
-            //         document.querySelector('.favorite-coin').innerHTML = "";
-            //         console.log("Document successfully written!");
-            //     })
-            //     .catch(function(error) {
-            //         console.error("Error writing document: ", error);
-            //     });
-
-
-            // } else {
-            //     fav.innerHTML = "☆"
-            // let coinsFav = document.querySelectorAll('.coin-favorite-item');
-            // let data = []
-            // for (let i = 0; i < coinsFav.length; i++) {
-            //     if (coinsFav[i].innerHTML.trim() !== document.querySelector('.coin-name').innerHTML) {
-            //         data.push(coinsFav[i].innerHTML)
-            //     }
-            // }
-
-            // console.log(data)
-            // db.collection("favorites").doc(auth.currentUser.email).update({
-            //         coins: data
-            //     })
-            //     .then(function() {
-            //         document.querySelector('.favorite-coin').innerHTML = "";
-            //         firebaseFav(db, auth)
-            //         console.log("Document successfully written!");
-            //     })
-            //     .catch(function(error) {
-            //         console.error("Error writing document: ", error);
-            //     });
-            // }
-            // });
-
+            favoriteLink(auth, db);
             chart(data, searchCoin)
 
         })
@@ -254,6 +210,7 @@ function getDataForChart(searchCoin) {
         .then(response => response.json())
         .then(data => {
             // CHART
+            checkForErrorCandle(data)
             googleCharts(data, searchCoin)
         })
 
@@ -261,10 +218,6 @@ function getDataForChart(searchCoin) {
 
 
 function chart(data, searchCoin) {
-    // console.log(data)
-    // chart
-
-
     let options = {
             type: 'line',
             data: {
@@ -300,6 +253,15 @@ function aboutCoin(searchCoin) {
     fetch("https://api.nomics.com/v1/dashboard?key=c70230f0d75bb35d650e00712558eba6")
         .then(response => response.json())
         .then(data => {
+            console.log(data)
+            for (let i = 0; i < data.length; i++) {
+                if (!data[i].currency.includes(searchCoin)) {
+                    console.log(searchCoin)
+                    document.querySelector('.no-data-for-coin').innerHTML = " Sorry no data for this coin. "
+                }
+            }
+
+
             for (let i = 0; i < data.length; i++) {
                 if (searchCoin === data[i].currency) {
                     document.querySelector('.availableSupply').innerHTML = `Available Supply ${data[i].availableSupply}`
@@ -308,6 +270,7 @@ function aboutCoin(searchCoin) {
                     document.querySelector('.high').innerHTML = `Total high ${data[i].high}`
                     document.querySelector('.weekOpen').innerHTML = `Week Open ${data[i].weekOpen}`
                     document.querySelector('.yearOpen').innerHTML = `Year Open ${data[i].yearOpen}`
+                    document.querySelector('.no-data-for-coin').innerHTML = " ";
                 }
             }
         })
@@ -388,7 +351,9 @@ function firebaseFav(db, auth) {
     db.collection("favorites").get().then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
             if (doc.id === auth.currentUser.email) {
-                console.log(doc.data())
+                if (doc.data().coins.length === 0) {
+                    document.querySelector('.favorite-coin').innerHTML = " You don't have any Fav coins"
+                }
                 for (let i = 0; i < doc.data().coins.length; i++)
                     document.querySelector('.favorite-coin').innerHTML += `<a class="coin-favorite-item">${doc.data().coins[i]} </a>`
             }
@@ -416,4 +381,33 @@ function login(db, auth) {
             })
             // form.reset();
     })
+}
+
+
+function favoriteLink(auth, db) {
+    setTimeout((e) => {
+        let favoritesLinks = document.querySelectorAll('.coin-favorite-item');
+        for (let i = 0; i < favoritesLinks.length; i++) {
+            favoritesLinks[i].addEventListener('click', (e) => {
+                favCoin = favoritesLinks[i].innerText.trim();
+                console.log(favoritesLinks[i].innerText)
+                showCoin(favCoin, auth, db);
+                aboutCoin(favCoin);
+                getDataForChart(favCoin);
+            })
+        }
+    }, 1000)
+}
+
+
+function checkForErrorCandle(data) {
+    if (data.length === 0) {
+        console.log("NO DATA FOR CANDLE GRAPH")
+        document.querySelector('#chart_div').style.display = "none";
+        document.querySelector('.message-candle').innerHTML = "Sorry, no information for candle graph... ";
+    } else {
+        document.querySelector('#chart_div').style.display = "block";
+        document.querySelector('.message-candle').innerHTML = "";
+    }
+
 }

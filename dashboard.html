@@ -25,9 +25,9 @@
                     </button>
             <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
                 <ul class="navbar-nav ml-auto">
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" href="#">Signin</a>
-                    </li> -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Front Page</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" id="logout" href="index.html">Logout</a>
                     </li>
@@ -41,7 +41,7 @@
         <div class="search-container d-flex justify-content-center">
             <form class="search-form">
                 <div class="input-group mb-3 search-group">
-                    <input type="text" id="search" class="form-control" placeholder="Search" value="">
+                    <input type="text" id="search" required class="form-control" placeholder="Search" value="">
                     <div class="input-group-append">
                         <button class="btn btn-outline-secondary" type="submit" id="button-search">Search</button>
                     </div>
@@ -50,6 +50,7 @@
         </div>
 
         <div class="search-result">
+            <div class="no-data-for-coin"></div>
             <div class="row">
                 <p>Favorites: <span class="favorite-coin"></span></p>
             </div>
@@ -74,6 +75,8 @@
     <div class="container">
         <!-- <div id="chart_div_line"></div> -->
         <canvas id="line-chart" width="800" height="450" style="display:hide"></canvas>
+
+        <div class="message-candle"></div>
         <div id="chart_div" style="width:auto; height: 500px;"></div>
 
     </div>

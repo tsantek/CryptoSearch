@@ -89,6 +89,11 @@ footer p {
     cursor: pointer;
 }
 
+.coin-favorite-item,
+.not-favorite {
+    cursor: pointer;
+}
+
 
 /* SIGN UP */
 
