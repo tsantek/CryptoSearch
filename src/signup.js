@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.querySelector('.modal-body').innerHTML = "Fowarding to Dashboard....";
 
                 db.collection("favorites").doc(email).set({
-                        coints: []
+                        coins: []
                     })
                     .then(function() {
                         console.log("Document successfully written!");

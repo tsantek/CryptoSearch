@@ -21,7 +21,8 @@ document.addEventListener('DOMContentLoaded', function() {
     //  AUTH LOGIN
 
     login(db, auth);
-
+    firebaseLogin(auth, db);
+    firebaseFav(db, auth);
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -33,8 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
     })
 
 
-    firebaseLogin(auth, db);
-    firebaseFav(db, auth);
+
 
 
 })
@@ -67,14 +67,16 @@ function showCoin(searchCoin, auth, db) {
             var docRef = db.collection("favorites").doc(auth.currentUser.email);
             document.querySelector('.not-favorite').innerHTML = `☆`;
 
-
+            // STAR
             docRef.get().then((doc) => {
                 for (let i = 0; i < doc.data().coins.length; i++) {
-                    if (doc.data().coins[i].trim() === searchCoin) {
+                    if (doc.data().coins[i] === searchCoin) {
+                        console.log("IT IS")
                         document.querySelector('.favorite').innerHTML = `★`;
                         document.querySelector('.not-favorite').innerHTML = ``;
-                    }
-                    if (doc.data().coins[i].trim() !== searchCoin) {
+                        return;
+                    } else if (doc.data().coins[i].trim() !== searchCoin) {
+                        console.log("IT IS NOT")
                         document.querySelector('.favorite').innerHTML = ``;
                         document.querySelector('.not-favorite').innerHTML = `☆`;
                     }
@@ -386,6 +388,7 @@ function firebaseFav(db, auth) {
     db.collection("favorites").get().then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
             if (doc.id === auth.currentUser.email) {
+                console.log(doc.data())
                 for (let i = 0; i < doc.data().coins.length; i++)
                     document.querySelector('.favorite-coin').innerHTML += `<a class="coin-favorite-item">${doc.data().coins[i]} </a>`
             }
