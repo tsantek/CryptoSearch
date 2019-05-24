@@ -47,6 +47,10 @@ footer p {
     text-align: center;
 }
 
+.top-coints {
+    overflow: scroll;
+}
+
 
 /* PROFILE */
 
