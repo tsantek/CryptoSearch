@@ -257,13 +257,18 @@ function aboutCoin(searchCoin) {
             for (let i = 0; i < data.length; i++) {
                 if (!data[i].currency.includes(searchCoin)) {
                     console.log(searchCoin)
-                    document.querySelector('.no-data-for-coin').innerHTML = " Sorry no data for this coin. "
+                    document.querySelector('.no-data-for-coin').innerHTML = " Sorry no data for this coin.";
+                    document.querySelector('.about-coin').style.display = "none";
+                    document.querySelector('.charts-contaner').style.display = "none";
+
                 }
             }
 
 
             for (let i = 0; i < data.length; i++) {
                 if (searchCoin === data[i].currency) {
+                    document.querySelector('.about-coin').style.display = "block";
+                    document.querySelector('.charts-contaner').style.display = "block";
                     document.querySelector('.availableSupply').innerHTML = `Available Supply ${data[i].availableSupply}`
                     document.querySelector('.dayOpen').innerHTML = `Day Open ${data[i].dayOpen}`
                     document.querySelector('.dayClose').innerHTML = ` Day Close ${data[i].close}`

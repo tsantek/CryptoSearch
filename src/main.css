@@ -94,6 +94,11 @@ footer p {
     cursor: pointer;
 }
 
+.no-data-for-coin,
+.message-candle {
+    color: red;
+}
+
 
 /* SIGN UP */
 

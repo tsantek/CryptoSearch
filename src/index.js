@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     marketCap()
     getDataFromApiForTopTenCoins();
     time();
+    ifIsSignIn();
 })
 
 // data on page
@@ -180,4 +181,9 @@ function marketCap() {
 
         })
         .catch(e => console.log(e))
+}
+
+
+function ifIsSignIn() {
+
 }
