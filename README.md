@@ -10,3 +10,7 @@ User can create a list of favorites coints.
 User can logout.
 
 DEMO : http://crypro-search.surge.sh/
+
+![Crypto Search](https://github.com/tsantek/CryptoSearch/blob/master/cryptoSearch.png)
+
+
