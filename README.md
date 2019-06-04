@@ -1,1 +1,12 @@
-README.... will be updated...this weekend...
+Crypto Search is a project for Galvanize and my personal portfolio.  
+
+Aplication is hosted on surge with Firebase Auth login and database.
+
+Story: 
+User can create account. 
+User can login to his account. 
+User can see 1600 coints data in 2 graphs. 
+User can create a list of favorites coints.
+User can logout.
+
+DEMO : http://crypro-search.surge.sh/
