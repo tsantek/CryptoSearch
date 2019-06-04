@@ -47,7 +47,7 @@ function showCoin(searchCoin, auth, db) {
         month = `0${date.getMonth() + 1}`
     }
     if (day < 10) {
-        day = `0${ate.getDate()}`
+        day = `0${date.getDate()}`
     }
 
     fetch(`https://api.nomics.com/v1/currencies/sparkline?key=c70230f0d75bb35d650e00712558eba6&start=${year}-${month}-01T00%3A00%3A00Z&end=${year}-${month}-${day}T00%3A00%3A00Z`)
@@ -202,7 +202,7 @@ function getDataForChart(searchCoin) {
         month = `0${date.getMonth() + 1}`
     }
     if (day < 10) {
-        day = `0${ate.getDate()}`
+        day = `0${date.getDate()}`
     }
 
 

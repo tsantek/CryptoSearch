@@ -111,7 +111,7 @@ function marketCap() {
         month = `0${date.getMonth() + 1}`
     }
     if (day < 10) {
-        day = `0${ate.getDate()}`
+        day = `0${date.getDate()}`
     }
 
 
