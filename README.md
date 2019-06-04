@@ -13,4 +13,4 @@ DEMO : http://crypro-search.surge.sh/
 
 ![Crypto Search](https://github.com/tsantek/CryptoSearch/blob/master/cryptoSearch.png)
 
-
+![Crypto Search](https://github.com/tsantek/CryptoSearch/blob/master/cryptoSearch2.png)
