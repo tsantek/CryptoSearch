@@ -1,6 +1,6 @@
 Crypto Search is a project for Galvanize and my personal portfolio.  
 
-Aplication is hosted on surge with Firebase Auth login and database.
+Application is hosted on surge with Firebase Auth login and database.
 
 Story: 
 User can create account. 
